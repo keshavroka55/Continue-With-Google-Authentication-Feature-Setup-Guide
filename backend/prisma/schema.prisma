@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String?
+  role       Role     @default(food_lover)
+  bio        String?
+  avatar     String?
+
+   // Google Auth related fields 
+  googleId            String?   @unique @map("google_id")
+  emailVerified       Boolean   @default(false) @map("email_verified")
+  emailVerificationToken String? @map("email_verification_token")
+  passwordResetToken  String?   @map("password_reset_token")
+  passwordResetExpiry DateTime? @map("password_reset_expiry")
+  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("users")
+}
+
+// Enums
+enum Role {
+  food_lover
+  chef
+  admin
+}
