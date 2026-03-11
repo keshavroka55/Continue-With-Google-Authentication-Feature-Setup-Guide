@@ -89,8 +89,8 @@ Make sure you have these installed on your machine:
 ### Step 1: Clone the Repository
 
 ```bash
-git clone <your-repo-url>
-cd auth
+git clone https://github.com/keshavroka55/Continue-With-Google-Authentication-Feature-Setup-Guide.git
+cd Continue-With-Google-Authentication-Feature-Setup-Guide
 ```
 
 ---
@@ -461,3 +461,9 @@ curl -X POST http://localhost:5000/api/auth/login \
 # Get current user (using saved cookie)
 curl http://localhost:5000/api/auth/me -b cookies.txt
 ```
+
+---
+
+## 👨‍💻 Created By
+
+**Keshav Roka** — [@keshavroka55](https://github.com/keshavroka55)
