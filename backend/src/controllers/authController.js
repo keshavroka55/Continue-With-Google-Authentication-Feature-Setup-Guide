@@ -229,10 +229,8 @@ export const forgotPassword = async (req, res) => {
             return res.status(400).json({ message: "Email is required" });
         }
 
-        // Send email async without waiting (non-blocking)
-        requestPasswordReset(email).catch((err) => {
-            console.error("Email send failed:", err);
-        });
+        await requestPasswordReset(email); // 
+
 
         // Return success immediately
         res.json({ message: "If email exists, reset link has been sent" });
