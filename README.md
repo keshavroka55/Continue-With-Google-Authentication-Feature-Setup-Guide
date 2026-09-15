@@ -378,6 +378,15 @@ curl -X POST http://localhost:5000/api/auth/login \
 
 ---
 
+
 ## 👨‍💻 Created By
 
 **Keshav Roka** — [@keshavroka55](https://github.com/keshavroka55)
+
+
+## Contributing
+
+Contributions are welcome!
+
+Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file before submitting a Pull Request.
+--- 
