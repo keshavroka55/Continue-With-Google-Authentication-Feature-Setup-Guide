@@ -11,7 +11,6 @@ model User {
   name       String
   email      String   @unique
   password   String?
-  role       Role     @default(food_lover)
   bio        String?
   avatar     String?
 
@@ -25,12 +24,23 @@ model User {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  refreshTokens RefreshToken[]
+
   @@map("users")
 }
 
-// Enums
-enum Role {
-  food_lover
-  chef
-  admin
+
+
+model RefreshToken {
+  id          String   @id @default(uuid())
+  tokenHash   String   @unique          // SHA-256 hash of the raw token
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  csrfToken   String                    // paired CSRF token
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  userAgent   String?                   // optional: track device which broswer + device name. 
+  ipAddress   String?                   // optional: track origin IP (study on the logs management topic.)
+  @@index([userId])
 }
+

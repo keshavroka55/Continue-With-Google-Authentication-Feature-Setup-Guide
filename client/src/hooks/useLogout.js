@@ -1,5 +1,5 @@
 import { useAuth } from "../contexts/AuthContext";
-import { logoutAPI } from "../services/authService";
+import { logoutAPI } from "../features/auth/authService";
 
 export default function useLogout() {
     const { logout } = useAuth();

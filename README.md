@@ -14,63 +14,6 @@ A complete authentication system built with **Express.js + Prisma + PostgreSQL**
 
 ---
 
-## 📁 Project Structure
-
-```
-auth/
-├── package.json              # Root — runs both backend + client together
-├── backend/
-│   ├── server.js             # Entry point
-│   ├── .env                  # Environment variables (you must edit this)
-│   ├── prisma.config.ts      # Prisma configuration
-│   ├── prisma/
-│   │   └── schema.prisma     # Database schema (User model)
-│   └── src/
-│       ├── app.js            # Express app setup
-│       ├── prisma.js          # Prisma client instance
-│       ├── config/
-│       │   ├── config.js      # Reads .env values
-│       │   └── passport.js    # Google OAuth strategy
-│       ├── controllers/
-│       │   └── authController.js  # All auth endpoints
-│       ├── middleware/
-│       │   ├── authMiddleware.js   # JWT verification
-│       │   └── role.middleware.js  # Role-based access
-│       ├── routes/
-│       │   └── auth.routes.js     # API route definitions
-│       └── services/
-│           ├── authService.js     # Business logic
-│           └── email.service.js   # Email sending
-├── client/
-│   ├── .env                  # Frontend env (API URL)
-│   ├── vite.config.js        # Vite + Tailwind + proxy
-│   ├── index.html
-│   └── src/
-│       ├── main.jsx          # App entry with Router + AuthProvider
-│       ├── App.jsx
-│       ├── contexts/
-│       │   └── AuthContext.jsx    # Auth state management
-│       ├── services/
-│       │   └── authService.js     # API call functions
-│       ├── hooks/
-│       │   └── useLogout.js       # Logout hook
-│       ├── components/
-│       │   ├── Alert.jsx          # Success/Error messages
-│       │   └── ProtectedRoute.jsx # Route guard
-│       ├── pages/
-│       │   ├── LoginPage.jsx
-│       │   ├── RegisterPage.jsx
-│       │   ├── SelectRolePage.jsx
-│       │   ├── ForgotPasswordPage.jsx
-│       │   ├── ResetPasswordPage.jsx
-│       │   ├── HomePage.jsx
-│       │   └── DashboardPage.jsx
-│       └── Routes/
-│           └── AppRoute.jsx       # All route definitions
-```
-
----
-
 ## 🚀 Setup Guide (Step by Step)
 
 ### Prerequisites
@@ -103,10 +46,13 @@ npm install
 
 # Install backend dependencies
 cd backend
+# Create environment file
+cp .env.example .env
 npm install
 
 # Install client dependencies
 cd ../client
+cp .env.example .env
 npm install
 
 # Go back to root
@@ -301,16 +247,6 @@ You should see: `Your database is now in sync with your schema.`
 
 ### Step 8: Run the Application
 
-From the **root `auth/` directory**:
-
-```bash
-npm run dev
-```
-
-This starts both the backend (port 5000) and the frontend (port 3000) at the same time.
-
-Or run them separately in two terminals:
-
 ```bash
 # Terminal 1 — Backend
 cd backend
@@ -409,24 +345,6 @@ User clicks "Continue with Google"
 
 ---
 
-## 📝 Your `.env` Checklist
-
-Before running, make sure these are set correctly in `backend/.env`:
-
-| Variable | Status | Notes |
-|----------|--------|-------|
-| `DATABASE_URL` | ⬜ | Must match your PostgreSQL credentials |
-| `JWT_SECRET` | ⬜ | Any string for dev, use `openssl rand -base64 32` for production |
-| `GOOGLE_CLIENT_ID` | ⬜ | From Google Cloud Console |
-| `GOOGLE_CLIENT_SECRET` | ⬜ | From Google Cloud Console |
-| `GOOGLE_CALLBACK_URL` | ⬜ | Must match Google Console redirect URI |
-| `EMAIL_USER` | ⬜ | Your Gmail address |
-| `EMAIL_PASSWORD` | ⬜ | Gmail App Password (16 chars) |
-| `EMAIL_FROM` | ⬜ | Format: `App Name <email@gmail.com>` |
-| `CLIENT_URL` | ✅ | Default: `http://localhost:3000` |
-| `PORT` | ✅ | Default: `5000` |
-
----
 
 ## 🧪 Testing the System
 
@@ -457,10 +375,6 @@ curl -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
   -c cookies.txt \
   -d '{"email":"test@example.com","password":"password123"}'
-
-# Get current user (using saved cookie)
-curl http://localhost:5000/api/auth/me -b cookies.txt
-```
 
 ---
 
