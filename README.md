@@ -1,392 +1,453 @@
-# 🔐 Auth System — Full-Stack Authentication with Role-Based Access
+# 🔐 Auth System
 
-A complete authentication system built with **Express.js + Prisma + PostgreSQL** (backend) and **React + Vite + TailwindCSS** (frontend).
+Full-stack authentication system built with **Express.js, Prisma, PostgreSQL, React, Vite, and TailwindCSS**.
 
-### Features
+## Features
 
-- ✅ Email/Password Registration & Login
-- ✅ Google OAuth ("Continue with Google")
-- ✅ JWT Authentication (HTTP-only cookies)
-- ✅ Role-Based Access Control (food_lover, chef, admin)
-- ✅ Password Reset via Email
-- ✅ Auto-redirect based on user role
-- ✅ Protected routes
+* Email/password registration and login
+* Google OAuth
+* JWT authentication with HTTP-only cookies
+* Role-based access control
+* Password reset via email
+* Protected routes
+* Automatic role-based redirects
+
+## Tech Stack
+
+**Backend**
+
+* Node.js
+* Express.js
+* Prisma
+* PostgreSQL
+* JWT
+* Passport.js
+
+**Frontend**
+
+* React
+* Vite
+* TailwindCSS
 
 ---
 
-## 🚀 Setup Guide (Step by Step)
+## Getting Started
 
 ### Prerequisites
 
-Make sure you have these installed on your machine:
+Make sure you have installed:
 
-| Tool | Version | How to Check | How to Install |
-|------|---------|-------------|----------------|
-| **Node.js** | v18+ | `node --version` | [nodejs.org](https://nodejs.org/) |
-| **npm** | v9+ | `npm --version` | Comes with Node.js |
-| **PostgreSQL** | v14+ | `psql --version` | [postgresql.org/download](https://www.postgresql.org/download/) |
-| **Git** | any | `git --version` | [git-scm.com](https://git-scm.com/) |
+| Tool       | Version            |
+| ---------- | ------------------ |
+| Node.js    | v18+               |
+| npm        | v9+                |
+| PostgreSQL | v14+               |
+| Git        | Any recent version |
 
----
+* [Node.js](https://nodejs.org/)
+* [PostgreSQL](https://www.postgresql.org/download/)
+* [Git](https://git-scm.com/)
 
-### Step 1: Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/keshavroka55/Continue-With-Google-Authentication-Feature-Setup-Guide.git
 cd Continue-With-Google-Authentication-Feature-Setup-Guide
 ```
 
----
+### 2. Install Dependencies
 
-### Step 2: Install All Dependencies
+Install root dependencies:
 
 ```bash
-# Install root dependencies (concurrently — runs backend + client together)
 npm install
+```
 
-# Install backend dependencies
+Install backend dependencies:
+
+```bash
 cd backend
-# Create environment file
-cp .env.example .env
 npm install
+```
 
-# Install client dependencies
+Create the backend environment file:
+
+```bash
+cp .env.example .env
+```
+
+Install client dependencies:
+
+```bash
 cd ../client
-cp .env.example .env
 npm install
+```
 
-# Go back to root
+If the client has an `.env.example` file:
+
+```bash
+cp .env.example .env
+```
+
+Return to the project root:
+
+```bash
 cd ..
 ```
 
+> **Important:** Never commit `.env` files. Use `.env.example` as the template for required environment variables.
+
 ---
 
-### Step 3: Set Up PostgreSQL Database
+## Database Setup
 
-You need a PostgreSQL database. Here's how to create one:
+Create a PostgreSQL database for the project.
 
-#### Option A: Using the terminal (psql)
+### Using PostgreSQL
 
-```bash
-# Open PostgreSQL shell (you may need to use 'sudo -u postgres psql' on Linux)
-psql -U postgres
-
-# Inside the PostgreSQL shell, run:
+```sql
 CREATE USER auth_user WITH PASSWORD 'password123';
-CREATE DATABASE auth_database OWNER auth_user;
-GRANT ALL PRIVILEGES ON DATABASE auth_database TO auth_user;
 
-# Exit
-\q
+CREATE DATABASE auth_database OWNER auth_user;
+
+GRANT ALL PRIVILEGES ON DATABASE auth_database TO auth_user;
 ```
 
-#### Option B: Using pgAdmin (GUI)
-
-1. Open pgAdmin
-2. Right-click **Login/Group Roles** → Create → Login/Group Role
-   - Name: `auth_user`
-   - Under **Definition** tab: Password: `password123`
-   - Under **Privileges** tab: Toggle "Can login?" to Yes
-3. Right-click **Databases** → Create → Database
-   - Name: `auth_database`
-   - Owner: `auth_user`
-
-> 💡 **Note**: You can change `auth_user`, `password123`, and `auth_database` to anything you want. Just make sure to update the `.env` file to match (see Step 4).
-
----
-
-### Step 4: Configure the Backend `.env` File
-
-Open `backend/.env` and update the values:
+Update your `backend/.env`:
 
 ```env
-PORT=5000
 DATABASE_URL="postgresql://auth_user:password123@localhost:5432/auth_database"
-JWT_SECRET="auth_jwt_secret_12345"
-JWT_EXPIRATION=30d
 ```
 
-#### Understanding the DATABASE_URL format:
+### Database URL Format
 
-```
+```text
 postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME
 ```
 
-| Part | What it is | Example |
-|------|-----------|---------|
-| `USERNAME` | PostgreSQL user you created | `auth_user` |
-| `PASSWORD` | Password for that user | `password123` |
-| `HOST` | Where your database runs | `localhost` |
-| `PORT` | PostgreSQL port (default: 5432) | `5432` |
-| `DATABASE_NAME` | Name of your database | `auth_database` |
+---
 
-#### Setting up the JWT_SECRET:
+## Environment Variables
 
-The `JWT_SECRET` is a random string used to sign tokens. For development, any string works. For production, generate a secure one:
+### Backend
+
+Create the environment file:
 
 ```bash
-# Run this in your terminal to generate a strong secret:
+cd backend
+cp .env.example .env
+```
+
+Example:
+
+```env
+PORT=5000
+
+DATABASE_URL="postgresql://auth_user:password123@localhost:5432/auth_database"
+
+JWT_SECRET="your-secret-key"
+JWT_EXPIRATION=30d
+
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+GOOGLE_CALLBACK_URL="http://localhost:5000/api/auth/google/callback"
+```
+
+For production, generate a strong JWT secret:
+
+```bash
 openssl rand -base64 32
 ```
 
-Copy the output and paste it as the `JWT_SECRET` value.
+> Never use the example secret in production.
 
 ---
 
-### Step 5: Set Up Google OAuth (Continue with Google)
+## Google OAuth Setup
 
-To enable "Continue with Google" login, you need to create a Google OAuth 2.0 project.
+To enable **Continue with Google**:
 
-#### 5.1 — Go to Google Cloud Console
+1. Open [Google Cloud Console](https://console.cloud.google.com/).
+2. Create a new project.
+3. Configure the OAuth consent screen.
+4. Create an OAuth 2.0 Client ID.
+5. Select **Web application**.
+6. Add the following authorized JavaScript origin:
 
-1. Open [console.cloud.google.com](https://console.cloud.google.com/)
-2. Sign in with your Google account
-
-#### 5.2 — Create a New Project
-
-1. Click the project dropdown at the top → **New Project**
-2. Enter a name (e.g., "Auth App") → **Create**
-3. Select your new project from the dropdown
-
-#### 5.3 — Enable the Google+ API
-
-1. Go to **APIs & Services** → **Library**
-2. Search for **"Google+ API"** → Click it → **Enable**
-
-#### 5.4 — Configure the OAuth Consent Screen
-
-1. Go to **APIs & Services** → **OAuth consent screen**
-2. Select **External** → **Create**
-3. Fill in:
-   - App name: `Auth App`
-   - User support email: your email
-   - Developer contact: your email
-4. Click **Save and Continue** through the remaining steps
-
-#### 5.5 — Create OAuth 2.0 Credentials
-
-1. Go to **APIs & Services** → **Credentials**
-2. Click **Create Credentials** → **OAuth client ID**
-3. Application type: **Web application**
-4. Name: `Auth App Web Client`
-5. Under **Authorized JavaScript origins**, add:
-   ```
-   http://localhost:3000
-   ```
-6. Under **Authorized redirect URIs**, add:
-   ```
-   http://localhost:5000/api/auth/google/callback
-   ```
-7. Click **Create**
-8. You'll see your **Client ID** and **Client Secret** — copy them!
-
-#### 5.6 — Add to `.env`
-
-Update these lines in `backend/.env`:
-
-```env
-GOOGLE_CLIENT_ID=paste_your_client_id_here
-GOOGLE_CLIENT_SECRET=paste_your_client_secret_here
-GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
+```text
+http://localhost:3000
 ```
 
-> ⚠️ **Important**: The `GOOGLE_CALLBACK_URL` must exactly match what you entered in step 5.5 (Authorized redirect URIs).
+7. Add the following authorized redirect URI:
+
+```text
+http://localhost:5000/api/auth/google/callback
+```
+
+8. Copy the Client ID and Client Secret into `backend/.env`:
+
+```env
+GOOGLE_CLIENT_ID="your-client-id"
+GOOGLE_CLIENT_SECRET="your-client-secret"
+GOOGLE_CALLBACK_URL="http://localhost:5000/api/auth/google/callback"
+```
+
+> The callback URL must exactly match the URL configured in Google Cloud Console.
 
 ---
 
-### Step 6: Set Up Email for Password Reset (Optional)
+## Password Reset Email
 
-To use the "Forgot Password" feature, you need an email service. The easiest way is using Gmail with an App Password.
+Password reset requires an email service.
 
-#### 6.1 — Enable 2-Step Verification on Gmail
+For Gmail:
 
-1. Go to [myaccount.google.com/security](https://myaccount.google.com/security)
-2. Under "How you sign in to Google", enable **2-Step Verification**
+1. Enable 2-Step Verification.
+2. Create a Gmail App Password.
+3. Add the credentials to `backend/.env`.
 
-#### 6.2 — Generate an App Password
-
-1. Go to [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
-2. Select app: **Mail**
-3. Select device: **Other** → enter "Auth App"
-4. Click **Generate**
-5. Copy the 16-character password (e.g., `abcd efgh ijkl mnop`)
-
-#### 6.3 — Add to `.env`
+Example:
 
 ```env
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_USER=your_actual_email@gmail.com
-EMAIL_PASSWORD=abcd efgh ijkl mnop
-EMAIL_FROM=Auth App <your_actual_email@gmail.com>
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-app-password
+EMAIL_FROM="Auth App <your-email@gmail.com>"
 ```
 
-> 💡 The `EMAIL_PASSWORD` is the App Password you generated, NOT your Gmail login password.
+> Use a Gmail **App Password**, not your normal Gmail password.
 
 ---
 
-### Step 7: Run Prisma Migration (Create Database Tables)
+## Run Database Migration
 
-This creates the `users` table in your database based on the Prisma schema:
+From the `backend` directory:
 
 ```bash
 cd backend
 npx prisma migrate dev --name init
 ```
 
-What this does:
-- Reads `prisma/schema.prisma`
-- Creates the `users` table with all the columns defined in the User model
-- Generates the Prisma Client so your code can talk to the database
-
-You should see: `Your database is now in sync with your schema.`
-
-> 💡 If you get a connection error, double-check your `DATABASE_URL` in `.env` and make sure PostgreSQL is running.
+This will create the required database tables and generate Prisma Client.
 
 ---
 
-### Step 8: Run the Application
+## Run the Application
+
+### Backend
 
 ```bash
-# Terminal 1 — Backend
 cd backend
 npm run dev
+```
 
-# Terminal 2 — Frontend
+### Frontend
+
+Open another terminal:
+
+```bash
 cd client
 npm run dev
 ```
 
-#### Verify it's working:
+The application should now be available at:
 
-| URL | What you should see |
-|-----|-------------------|
-| `http://localhost:3000` | Login page |
-| `http://localhost:3000/register` | Registration page |
-| `http://localhost:5000/api/health` | `{"status":"ok","timestamp":"..."}` |
+```text
+Frontend: http://localhost:3000
+Backend:  http://localhost:5000
+```
+
+Health check:
+
+```text
+http://localhost:5000/api/health
+```
 
 ---
 
-## 🔧 How Each Part Works
+## Authentication Flow
 
-### Authentication Flow
+### Email Authentication
 
-```
-Register → Password hashed with bcrypt → Stored in PostgreSQL
-Login    → Verify password → Generate JWT → Set HTTP-only cookie
-Logout   → Clear cookie
-```
-
-### Google OAuth Flow
-
-```
-User clicks "Continue with Google"
-  → Redirected to Google's login page
-  → Google sends user info back to /api/auth/google/callback
-  → Backend creates/finds user → Generates JWT cookie
-  → If new user → Redirect to /select-role
-  → If existing user → Redirect to /home or /dashboard (based on role)
+```text
+Register
+   ↓
+Password hashed with bcrypt
+   ↓
+Stored in PostgreSQL
+   ↓
+Login
+   ↓
+JWT generated
+   ↓
+JWT stored in HTTP-only cookie
 ```
 
-### Role-Based Redirects
+### Google OAuth
 
-| Role | After Login Redirects To |
-|------|------------------------|
-| `food_lover` | `/home` |
-| `chef` | `/dashboard` |
-| `admin` | `/dashboard` |
-
-### API Endpoints
-
-| Method | Endpoint | Auth Required | Description |
-|--------|----------|--------------|-------------|
-| POST | `/api/auth/register` | ❌ | Register new user |
-| POST | `/api/auth/login` | ❌ | Login with email/password |
-| GET | `/api/auth/me` | ✅ | Get current user data |
-| POST | `/api/auth/logout` | ✅ | Logout (clear cookie) |
-| POST | `/api/auth/register-admin` | ✅ Admin only | Create admin user |
-| GET | `/api/auth/google` | ❌ | Start Google OAuth |
-| GET | `/api/auth/google/callback` | ❌ | Google OAuth callback |
-| POST | `/api/auth/update-role` | ✅ | Update user role |
-| POST | `/api/auth/forgot-password` | ❌ | Request password reset email |
-| POST | `/api/auth/reset-password` | ❌ | Reset password with token |
-| GET | `/api/health` | ❌ | Health check |
+```text
+Continue with Google
+        ↓
+Google Login
+        ↓
+OAuth Callback
+        ↓
+Find/Create User
+        ↓
+Generate JWT
+        ↓
+Role-based Redirect
+```
 
 ---
 
-## 🐛 Common Issues & Fixes
+## Roles
 
-### "Connection refused" or database errors
-
-- Make sure PostgreSQL is running: `sudo systemctl status postgresql`
-- Start it if needed: `sudo systemctl start postgresql`
-- Verify your `DATABASE_URL` in `.env` matches your database credentials
-
-### "Module not found" errors
-
-- Make sure you ran `npm install` in all three directories (root, backend, client)
-
-### Google OAuth not working
-
-- Make sure you added both the JavaScript origin (`http://localhost:3000`) AND the redirect URI (`http://localhost:5000/api/auth/google/callback`) in Google Cloud Console
-- Make sure `GOOGLE_CALLBACK_URL` in `.env` exactly matches the redirect URI
-
-### Prisma migration fails
-
-- Check your `DATABASE_URL` is correct
-- Make sure the PostgreSQL user has permissions on the database
-- Try: `npx prisma migrate reset` to start fresh (⚠️ this deletes all data)
-
-### Email not sending
-
-- Make sure you're using an **App Password**, not your regular Gmail password
-- Make sure 2-Step Verification is enabled on your Google account
-- Check the `EMAIL_FROM` format: `App Name <email@gmail.com>`
+| Role         | Redirect     |
+| ------------ | ------------ |
+| `food_lover` | `/home`      |
+| `chef`       | `/dashboard` |
+| `admin`      | `/dashboard` |
 
 ---
 
+## API Endpoints
 
-## 🧪 Testing the System
+| Method | Endpoint                    | Auth  | Description            |
+| ------ | --------------------------- | ----- | ---------------------- |
+| POST   | `/api/auth/register`        | No    | Register user          |
+| POST   | `/api/auth/login`           | No    | Login                  |
+| GET    | `/api/auth/me`              | Yes   | Get current user       |
+| POST   | `/api/auth/logout`          | Yes   | Logout                 |
+| POST   | `/api/auth/register-admin`  | Admin | Create admin           |
+| GET    | `/api/auth/google`          | No    | Start Google OAuth     |
+| GET    | `/api/auth/google/callback` | No    | OAuth callback         |
+| POST   | `/api/auth/update-role`     | Yes   | Update role            |
+| POST   | `/api/auth/forgot-password` | No    | Request password reset |
+| POST   | `/api/auth/reset-password`  | No    | Reset password         |
+| GET    | `/api/health`               | No    | Health check           |
 
-### 1. Register a new user
-Go to `http://localhost:3000/register` → Fill in name, email, password → Pick a role → Submit
+---
 
-### 2. Login
-Go to `http://localhost:3000/login` → Enter email and password → You should be redirected based on your role
+## Testing
 
-### 3. Google Login
-Click "Continue with Google" on the login page → Sign in with Google → If new user, you'll be asked to select a role
+### Register
 
-### 4. Password Reset
-Go to `http://localhost:3000/forgot-password` → Enter your email → Check your inbox for the reset link
+```text
+http://localhost:3000/register
+```
 
-### 5. Test API directly
+### Login
+
+```text
+http://localhost:3000/login
+```
+
+### Google Login
+
+Click **Continue with Google** on the login page.
+
+### Password Reset
+
+```text
+http://localhost:3000/forgot-password
+```
+
+### API Health Check
+
 ```bash
-# Health check
 curl http://localhost:5000/api/health
-
-# Register
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Test User","email":"test@example.com","password":"password123","role":"food_lover"}'
-
-# Login
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -c cookies.txt \
-  -d '{"email":"test@example.com","password":"password123"}'
+```
 
 ---
 
+## Common Issues
 
-## 👨‍💻 Created By
+### Database Connection Error
 
-**Keshav Roka** — [@keshavroka55](https://github.com/keshavroka55)
+Check:
 
+* PostgreSQL is running.
+* `DATABASE_URL` is correct.
+* PostgreSQL username and password are correct.
+
+On Linux:
+
+```bash
+sudo systemctl status postgresql
+```
+
+### Module Not Found
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run this inside the required project directory.
+
+### Google OAuth Not Working
+
+Check that:
+
+* The JavaScript origin is correct.
+* The redirect URI is correct.
+* `GOOGLE_CALLBACK_URL` matches the Google Cloud configuration exactly.
+
+### Prisma Migration Failed
+
+Check your database connection:
+
+```bash
+npx prisma migrate dev
+```
+
+> `npx prisma migrate reset` will delete existing database data. Use it only when you understand the consequences.
+
+---
+
+## Project Structure
+
+```text
+auth/
+├── backend/
+│   ├── prisma/
+│   ├── src/
+│   ├── .env
+│   ├── .env.example
+│   └── ...
+├── client/
+│   └── ...
+├── CONTRIBUTING.md
+├── Improvement.md
+├── LICENSE
+├── package.json
+├── package-lock.json
+└── README.md
+```
+
+---
 
 ## Contributing
 
 Contributions are welcome!
 
-Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file before submitting a Pull Request.
---- 
+Please read the **[CONTRIBUTING.md](CONTRIBUTING.md)** before submitting a Pull Request.
+
+---
+
+## License
+
+This project is licensed under the **MIT License**.
+
+See the **[LICENSE](LICENSE)** file for details.
+
+---
+
+## Author
+
+**Keshav Roka**
+
+GitHub: [@keshavroka55](https://github.com/keshavroka55)
