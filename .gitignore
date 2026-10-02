@@ -1,1 +1,10 @@
 node_modules/
+
+# Environment secrets
+.env
+backend/.env
+client/.env
+client/.env.*
+
+# Build output
+client/dist/

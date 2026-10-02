@@ -443,11 +443,3 @@ Please read the **[CONTRIBUTING.md](CONTRIBUTING.md)** before submitting a Pull 
 This project is licensed under the **MIT License**.
 
 See the **[LICENSE](LICENSE)** file for details.
-
----
-
-## Author
-
-**Keshav Roka**
-
-GitHub: [@keshavroka55](https://github.com/keshavroka55)
