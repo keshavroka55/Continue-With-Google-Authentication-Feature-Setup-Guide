@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { config } from "../config/config.js";
 
 /**
- * Short-lived access token (15 minutes)
+ * Short-lived access token (configurable via config.ACCESS_TOKEN_EXPIRES_IN, default 15m)
  * Sent in JSON response body → stored in React memory (never localStorage)
  */
 export const generateAccessToken = (user) => {
@@ -14,19 +14,19 @@ export const generateAccessToken = (user) => {
             role: user.role,
         },
         config.ACCESS_TOKEN_SECRET,
-        { expiresIn: "15m" }
+        { expiresIn: config.ACCESS_TOKEN_EXPIRES_IN }
     );
 };
 
 /**
- * Long-lived refresh token (7 days)
+ * Long-lived refresh token (configurable via config.REFRESH_TOKEN_EXPIRES_IN, default 7d)
  * Sent as HttpOnly cookie → never readable by JS
  */
 export const generateRefreshToken = (user) => {
     return jwt.sign(
         { id: user.id },
         config.REFRESH_TOKEN_SECRET,
-        { expiresIn: "7d" }
+        { expiresIn: config.REFRESH_TOKEN_EXPIRES_IN }
     );
 };
 

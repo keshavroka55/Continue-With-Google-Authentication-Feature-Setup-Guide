@@ -64,13 +64,6 @@ export default function RegisterPage() {
                 className="w-full max-w-md"
             >
                 <div className="p-8 rounded-2xl shadow-2xl border bg-white/80 backdrop-blur-lg border-white/50">
-                    {/* Logo */}
-                    <div className="flex justify-center mb-8">
-                        <div className="bg-[#FF7A00] p-3 rounded-full">
-                            <ChefHat className="w-8 h-8 text-white" />
-                        </div>
-                    </div>
-
                     <h2 className="text-3xl font-bold text-center mb-2 text-gray-900">
                         Join AuthApp
                     </h2>

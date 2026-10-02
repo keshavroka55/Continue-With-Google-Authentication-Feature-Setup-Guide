@@ -3,7 +3,6 @@ import { registerUser, loginUser, requestPasswordReset,resetPassword } from "./a
 import jwt from "jsonwebtoken";
 import { config } from "../../config/config.js";
 
-
 import {
     generateAccessToken,
     generateRefreshToken,
@@ -69,7 +68,7 @@ export const register = async (req, res) => {
         const { name, email, password, role } = req.body;
 
         if (role === 'admin') {
-            return res.status(403).json({ message: "Admin registration is not allowed Muji" });
+            return res.status(403).json({ message: "Admin registration is not allowed." });
         }
 
         const allowedRole = ["food_lover", "chef"].includes(role) ? role : "food_lover";
@@ -299,11 +298,11 @@ export const googleCallback = async (req, res) => {
             next: redirectPath    // tells React where to go after grabbing tokens and clean the URL. 
         });
 
-        res.redirect(`${config.FRONTEND_URL}/auth/callback?${params.toString()}`);
+        res.redirect(`${config.CLIENT_URL}/auth/callback?${params.toString()}`);
 
     } catch (error) {
         console.error("Google callback error:", error);
-        res.redirect(`${config.FRONTEND_URL}/login?error=oauth_failed`);
+        res.redirect(`${config.CLIENT_URL}/login?error=oauth_failed`);
     }
 };
 
@@ -331,23 +330,9 @@ export const updateRole = async (req, res) => {
             },
         });
 
-        // Generate new JWT token with updated role
-        const newToken = jwt.sign(
-            { id: updatedUser.id, role: updatedUser.role },
-            config.JWT_SECRET,
-            { expiresIn: config.JWT_EXPIRATION }
-        );
-
-        // Update cookie with new token
-        res.cookie("token", newToken, {
-            httpOnly: true,
-            maxAge: 30 * 24 * 60 * 60 * 1000,
-            sameSite: "lax",
-            secure: config.NODE_ENV === "production",
-        });
-
         res.json({
             user: updatedUser,
+            accessToken: generateAccessToken(updatedUser),
             message: "Role updated successfully"
         });
     } catch (error) {

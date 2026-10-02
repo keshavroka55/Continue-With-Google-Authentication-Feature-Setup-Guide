@@ -16,7 +16,7 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [success, setSuccess] = useState("");
-    const { setUser } = useAuth();
+    const { setUser, setAccessToken, setCsrfToken } = useAuth();
     const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 
@@ -36,6 +36,8 @@ export default function LoginPage() {
 
             const data = await res.json();
             setUser(data.user);
+            setAccessToken(data.accessToken);
+            setCsrfToken(data.csrfToken);
             setSuccess("Login successful! Redirecting based on your role...");
 
         } catch (err) {
@@ -58,13 +60,6 @@ export default function LoginPage() {
                 className="w-full max-w-md"
             >
                 <div className="p-8 rounded-2xl shadow-2xl border bg-white/80 backdrop-blur-lg border-white/50">
-                    {/* Logo */}
-                    <div className="flex justify-center mb-8">
-                        <div className="bg-[#FF7A00] p-3 rounded-full">
-                            <ChefHat className="w-8 h-8 text-white" />
-                        </div>
-                    </div>
-
                     <h2 className="text-3xl font-bold text-center mb-2 text-gray-900">
                         Welcome Back
                     </h2>
@@ -75,7 +70,7 @@ export default function LoginPage() {
                     {/* Auto Role Detection Info */}
                     <div className="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                         <p className="text-xs text-blue-700">
-                            ℹ️ Your role is automatically detected from your account.
+                            ℹ️ Update the role based on your requirements.
                         </p>
                     </div>
 

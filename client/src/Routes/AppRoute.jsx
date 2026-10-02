@@ -4,8 +4,10 @@ import RegisterPage from "../pages/auth/RegisterPage";
 import SelectRolePage from "../pages/auth/SelectRolePage";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "../pages/auth//ResetPasswordPage";
+import OAuthCallback from "../pages/auth/OAuthCallback";
 import HomePage from "../pages/home/HomePage";
 import DashboardPage from "../pages/home/DashboardPage";
+import ProtectedRoute from "../components/ProtectedRoute.jsx";
 
 
 const AppRoute = () => {
@@ -20,10 +22,27 @@ const AppRoute = () => {
 
                     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                     <Route path="/reset-password" element={<ResetPasswordPage />} />
+                    <Route path="/auth/callback" element={<OAuthCallback />} />
 
-                    <Route path="/home" element={<HomePage />} />
+                    {/* Protected: food lovers and chefs */}
+                    <Route
+                        path="/home"
+                        element={
+                            <ProtectedRoute allowedRoles={["food_lover", "chef"]}>
+                                <HomePage />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                    <Route path="/dashboard" element={<DashboardPage />} />
+                    {/* Protected: admins and chefs */}
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <ProtectedRoute allowedRoles={["admin", "chef"]}>
+                                <DashboardPage />
+                            </ProtectedRoute>
+                        }
+                    />
 
                     <Route path="*" element={<LoginPage />} />
                 </Routes>
