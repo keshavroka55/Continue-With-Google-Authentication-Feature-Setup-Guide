@@ -2,51 +2,6 @@
 
 Full-stack authentication system built with **Express.js, Prisma, PostgreSQL, React, Vite, and TailwindCSS**.
 
-## Features
-
-* Email/password registration and login
-* Google OAuth
-* JWT authentication with HTTP-only cookies
-* Role-based access control
-* Password reset via email
-* Protected routes
-* Automatic role-based redirects
-
-## Tech Stack
-
-**Backend**
-
-* Node.js
-* Express.js
-* Prisma
-* PostgreSQL
-* JWT
-* Passport.js
-
-**Frontend**
-
-* React
-* Vite
-* TailwindCSS
-
----
-
-## Getting Started
-
-### Prerequisites
-
-Make sure you have installed:
-
-| Tool       | Version            |
-| ---------- | ------------------ |
-| Node.js    | v18+               |
-| npm        | v9+                |
-| PostgreSQL | v14+               |
-| Git        | Any recent version |
-
-* [Node.js](https://nodejs.org/)
-* [PostgreSQL](https://www.postgresql.org/download/)
-* [Git](https://git-scm.com/)
 
 ### 1. Clone the Repository
 
@@ -83,19 +38,6 @@ cd ../client
 npm install
 ```
 
-If the client has an `.env.example` file:
-
-```bash
-cp .env.example .env
-```
-
-Return to the project root:
-
-```bash
-cd ..
-```
-
-> **Important:** Never commit `.env` files. Use `.env.example` as the template for required environment variables.
 
 ---
 
@@ -131,12 +73,7 @@ postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME
 
 ### Backend
 
-Create the environment file:
-
-```bash
-cd backend
-cp .env.example .env
-```
+Update your `backend/.env`:
 
 Example:
 
@@ -249,55 +186,7 @@ Open another terminal:
 ```bash
 cd client
 npm run dev
-```
 
-The application should now be available at:
-
-```text
-Frontend: http://localhost:3000
-Backend:  http://localhost:5000
-```
-
-Health check:
-
-```text
-http://localhost:5000/api/health
-```
-
----
-
-## Authentication Flow
-
-### Email Authentication
-
-```text
-Register
-   ↓
-Password hashed with bcrypt
-   ↓
-Stored in PostgreSQL
-   ↓
-Login
-   ↓
-JWT generated
-   ↓
-JWT stored in HTTP-only cookie
-```
-
-### Google OAuth
-
-```text
-Continue with Google
-        ↓
-Google Login
-        ↓
-OAuth Callback
-        ↓
-Find/Create User
-        ↓
-Generate JWT
-        ↓
-Role-based Redirect
 ```
 
 ---
@@ -310,123 +199,7 @@ Role-based Redirect
 | `chef`       | `/dashboard` |
 | `admin`      | `/dashboard` |
 
----
-
-## API Endpoints
-
-| Method | Endpoint                    | Auth  | Description            |
-| ------ | --------------------------- | ----- | ---------------------- |
-| POST   | `/api/auth/register`        | No    | Register user          |
-| POST   | `/api/auth/login`           | No    | Login                  |
-| GET    | `/api/auth/me`              | Yes   | Get current user       |
-| POST   | `/api/auth/logout`          | Yes   | Logout                 |
-| POST   | `/api/auth/register-admin`  | Admin | Create admin           |
-| GET    | `/api/auth/google`          | No    | Start Google OAuth     |
-| GET    | `/api/auth/google/callback` | No    | OAuth callback         |
-| POST   | `/api/auth/update-role`     | Yes   | Update role            |
-| POST   | `/api/auth/forgot-password` | No    | Request password reset |
-| POST   | `/api/auth/reset-password`  | No    | Reset password         |
-| GET    | `/api/health`               | No    | Health check           |
-
----
-
-## Testing
-
-### Register
-
-```text
-http://localhost:3000/register
-```
-
-### Login
-
-```text
-http://localhost:3000/login
-```
-
-### Google Login
-
-Click **Continue with Google** on the login page.
-
-### Password Reset
-
-```text
-http://localhost:3000/forgot-password
-```
-
-### API Health Check
-
-```bash
-curl http://localhost:5000/api/health
-```
-
----
-
-## Common Issues
-
-### Database Connection Error
-
-Check:
-
-* PostgreSQL is running.
-* `DATABASE_URL` is correct.
-* PostgreSQL username and password are correct.
-
-On Linux:
-
-```bash
-sudo systemctl status postgresql
-```
-
-### Module Not Found
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Run this inside the required project directory.
-
-### Google OAuth Not Working
-
-Check that:
-
-* The JavaScript origin is correct.
-* The redirect URI is correct.
-* `GOOGLE_CALLBACK_URL` matches the Google Cloud configuration exactly.
-
-### Prisma Migration Failed
-
-Check your database connection:
-
-```bash
-npx prisma migrate dev
-```
-
-> `npx prisma migrate reset` will delete existing database data. Use it only when you understand the consequences.
-
----
-
-## Project Structure
-
-```text
-auth/
-├── backend/
-│   ├── prisma/
-│   ├── src/
-│   ├── .env
-│   ├── .env.example
-│   └── ...
-├── client/
-│   └── ...
-├── CONTRIBUTING.md
-├── Improvement.md
-├── LICENSE
-├── package.json
-├── package-lock.json
-└── README.md
-```
+Update: based on your requirements.
 
 ---
 

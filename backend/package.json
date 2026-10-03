@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon server.js",
+    "worker": "node worker.js",
     "start": "node server.js"
   },
   "keywords": [],
@@ -20,7 +21,7 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "nodemailer": "^8.0.1",
+    "nodemailer": "^8.0.11",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.20.0",

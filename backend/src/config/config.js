@@ -22,6 +22,8 @@ export const config = {
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
     EMAIL_FROM: process.env.EMAIL_FROM,
+    EMAIL_SECURE:process.env.EMAIL_SECURE,
+
 
     // Client
     CLIENT_URL: process.env.CLIENT_URL || "http://localhost:3000",

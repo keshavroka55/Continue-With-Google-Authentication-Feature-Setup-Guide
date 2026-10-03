@@ -87,43 +87,16 @@ Please:
 
 * Keep the code clean and readable.
 * Follow the existing project structure.
-* Avoid unnecessary dependencies.
 * Keep changes focused on the purpose of the Pull Request.
 * Test your changes before submitting.
 * Update documentation when necessary.
 * Write clear commit messages.
-* Be respectful and constructive when discussing changes.
 
-## Security
-
-**Never commit sensitive information**, including:
-
-* `.env` files
-* Passwords
-* API keys
-* JWT secrets
-* Database credentials
-* OAuth client secrets
-* Private keys
-
-Use `.env.example` to document required environment variables.
-
-## Reporting Bugs
-
-When reporting a bug, provide:
-
-1. A clear description of the problem.
-2. Steps to reproduce it.
-3. Expected behavior.
-4. Actual behavior.
-5. Relevant error messages or logs.
-6. Environment information when relevant.
 
 ## Suggesting Improvements
 
 Suggestions and new ideas are welcome.
-
-Before implementing a major change, consider opening an issue or discussing the idea first so that the proposed direction can be reviewed.
+Just update the Improvemenet.md file that's it. 
 
 ## Pull Request Checklist
 
@@ -131,7 +104,6 @@ Before submitting a Pull Request, make sure:
 
 * [ ] The code works as expected.
 * [ ] Existing functionality is not unnecessarily broken.
-* [ ] No secrets or `.env` files are included.
 * [ ] The code follows the existing style.
 * [ ] Documentation has been updated if necessary.
 * [ ] The Pull Request clearly explains the changes.

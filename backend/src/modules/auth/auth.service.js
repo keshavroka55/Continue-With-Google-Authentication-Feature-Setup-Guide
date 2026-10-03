@@ -1,8 +1,9 @@
 import prisma from "../../prisma.js";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { sendPasswordResetEmail } from "../../templates/emails/email.service.js";
+import { sendPasswordResetEmail } from "../../services/email/index.js";
 import { generateAccessToken } from "../../utils/tokenUtils.js";
+import { publishUserRegisteredEvent } from "../../events/userRegistered.js";
 
 export const registerUser = async ({ name, email, password, role }) => {
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -18,6 +19,8 @@ export const registerUser = async ({ name, email, password, role }) => {
     const user = await prisma.user.create({
         data: { name, email, password: hashed, role: role, emailVerified: false },
     });
+    
+    await publishUserRegisteredEvent(user);
 
     console.log("Registration is successful!");
     console.log("Registered User:", { id: user.id, name: user.name, email: user.email, role: user.role })
