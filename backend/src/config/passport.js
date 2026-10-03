@@ -1,8 +1,8 @@
-
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { config } from "./config.js";
 import prisma from "../prisma.js";
+import { publishUserRegisteredEvent } from "../events/userRegistered.js";
 
 passport.use(
     new GoogleStrategy(
@@ -50,6 +50,7 @@ passport.use(
                             },
                         });
                         isNewUser = true; // Newly created user
+                        await publishUserRegisteredEvent(user); // Trigger welcome-email event
                     }
                 }
 

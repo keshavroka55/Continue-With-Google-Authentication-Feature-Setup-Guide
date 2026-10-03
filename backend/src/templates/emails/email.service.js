@@ -47,3 +47,7 @@ export const sendVerificationEmail = async (email, verificationToken) => {
 
     await transporter.sendMail(mailOptions);
 };
+
+
+// Currently it is not used the logic is already write on the services/email/resetPasswordEmail.js
+// just keeping it has the simper logic 

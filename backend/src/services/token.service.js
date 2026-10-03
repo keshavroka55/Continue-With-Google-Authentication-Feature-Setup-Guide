@@ -1,4 +1,3 @@
-
 import prisma from "../prisma.js";
  
 /**
@@ -7,16 +6,24 @@ import prisma from "../prisma.js";
 export const saveRefreshToken = async ({ userId, tokenHash, csrfToken, userAgent, ipAddress }) => {
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
  
-    return prisma.refreshToken.create({
-        data: {
-            tokenHash,
-            userId,
-            csrfToken,
-            expiresAt,
-            userAgent,
-            ipAddress,
-        },
-    });
+    try {
+        return await prisma.refreshToken.create({
+            data: {
+                tokenHash,
+                userId,
+                csrfToken,
+                expiresAt,
+                userAgent,
+                ipAddress,
+            },
+        });
+    } catch (error) {
+        if (error?.code === "P2002" && error?.meta?.target?.includes("tokenHash")) {
+            // Retry once with a new token value if the hash collided.
+            throw new Error("Refresh token hash collision. Please retry login.");
+        }
+        throw error;
+    }
 };
  
 /**

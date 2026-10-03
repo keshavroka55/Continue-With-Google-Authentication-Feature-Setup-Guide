@@ -20,11 +20,13 @@ export const generateAccessToken = (user) => {
 
 /**
  * Long-lived refresh token (configurable via config.REFRESH_TOKEN_EXPIRES_IN, default 7d)
- * Sent as HttpOnly cookie → never readable by JS
+ * Include a unique jti so repeated logins in the same second cannot generate the same token.
  */
 export const generateRefreshToken = (user) => {
+    const jti = crypto.randomBytes(16).toString("hex");
+
     return jwt.sign(
-        { id: user.id },
+        { id: user.id, jti },
         config.REFRESH_TOKEN_SECRET,
         { expiresIn: config.REFRESH_TOKEN_EXPIRES_IN }
     );
@@ -51,9 +53,9 @@ export const hashToken = (token) => {
  * Cookie options for the refresh token cookie
  */
 export const refreshCookieOptions = (isProduction) => ({
-    httpOnly: true,                          // JS cannot read this cookie
-    secure: isProduction,                    // HTTPS only in production
-    sameSite: isProduction ? "strict" : "lax", // strict in prod blocks CSRF
-    maxAge: 7 * 24 * 60 * 60 * 1000,       // 7 days in ms
-    path: "/api/auth",                       // Cookie only sent to /api/auth routes
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "strict" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: "/api/auth",
 });
